@@ -5,7 +5,7 @@ use IEEE.NUMERIC_STD.ALL;
 library UNISIM;
 use UNISIM.vcomponents.all;
 
-entity three_wire_spi_top is
+entity three_wire_spi is
   generic (
     NUM_ADDR_BITS_G : integer := 13;
     NUM_DATA_BITS_G : integer := 8
@@ -31,10 +31,10 @@ entity three_wire_spi_top is
     spi_data_out_p       : out   std_logic_vector(NUM_DATA_BITS_G-1 downto 0);
     spi_data_valid_out_p : out   std_logic
     );
-end three_wire_spi_top;
+end three_wire_spi;
 
 
-architecture rtl of three_wire_spi_top is
+architecture rtl of three_wire_spi is
   -----------------------------------------------------------------------------
   -- Constants and Types
   -----------------------------------------------------------------------------

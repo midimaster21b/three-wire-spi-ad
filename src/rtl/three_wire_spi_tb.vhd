@@ -57,7 +57,7 @@ begin
   end process;
 
 
-  u_dut: entity work.three_wire_spi_top(rtl)
+  u_dut: entity work.three_wire_spi(rtl)
     generic map (
       NUM_ADDR_BITS_G => NUM_ADDR_BITS_C,
       NUM_DATA_BITS_G => NUM_DATA_BITS_C
