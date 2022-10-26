@@ -26,9 +26,9 @@ entity three_wire_spi is
     spi_trig_in_p        : in    std_logic;
     spi_addr_in_p        : in    std_logic_vector(NUM_ADDR_BITS_G-1 downto 0);
     spi_rw_in_p          : in    std_logic;
-    spi_data_in_p        : in    std_logic_vector(NUM_DATA_BITS_G-1 downto 0);
+    spi_data_write_in_p  : in    std_logic_vector(NUM_DATA_BITS_G-1 downto 0);
 
-    spi_data_out_p       : out   std_logic_vector(NUM_DATA_BITS_G-1 downto 0);
+    spi_data_read_out_p  : out   std_logic_vector(NUM_DATA_BITS_G-1 downto 0);
     spi_data_valid_out_p : out   std_logic
     );
 end three_wire_spi;
@@ -65,10 +65,10 @@ architecture rtl of three_wire_spi is
   signal spi_clk_in_ns       : std_logic;
 
   -- Message
-  signal spi_rw_r        : std_logic := RW_READ_C; -- 0: read, -- 1: write
-  signal spi_addr_r      : std_logic_vector(NUM_ADDR_BITS_G-1 downto 0) := (others => '0');
-  signal spi_read_data_r : std_logic_vector(NUM_DATA_BITS_G-1 downto 0) := (others => '0');
-  signal spi_data_out_r  : std_logic_vector(NUM_DATA_BITS_G-1 downto 0) := (others => '0');
+  signal spi_rw_r         : std_logic := RW_READ_C; -- 0: read, -- 1: write
+  signal spi_addr_r       : std_logic_vector(NUM_ADDR_BITS_G-1 downto 0) := (others => '0');
+  signal spi_read_data_r  : std_logic_vector(NUM_DATA_BITS_G-1 downto 0) := (others => '0');
+  signal spi_data_write_r : std_logic_vector(NUM_DATA_BITS_G-1 downto 0) := (others => '0');
 
   signal spi_header_r     : std_logic_vector(15 downto 0) := (others => '0');
   signal spi_data_valid_r : std_logic := '0';
@@ -88,7 +88,7 @@ begin
 
   -- Message output
   spi_data_valid_out_p <= spi_data_valid_r;
-  spi_data_out_p       <= spi_read_data_r;
+  spi_data_read_out_p  <= spi_read_data_r;
 
   --------------------------------------
   -- Advance to the next state
@@ -226,7 +226,7 @@ begin
       if(curr_spi_state_r = SPI_IDLE_STATE) then
         spi_rw_r       <= spi_rw_in_p;
         spi_addr_r     <= spi_addr_in_p;
-        spi_data_out_r <= spi_data_in_p;
+        spi_data_write_r <= spi_data_write_in_p;
 
         spi_header_r   <= spi_rw_in_p & "00" & spi_addr_in_p;
 
@@ -262,7 +262,7 @@ begin
 
         when SPI_WRITE_STATE =>
           sclk_en_r     <= '1'; -- Enable clock
-          sdio_r        <= spi_data_out_r(7-to_integer(data_counter_r));
+          sdio_r        <= spi_data_write_r(7-to_integer(data_counter_r));
           sdio_high_z_r <= '0';
           csn_r         <= '0'; -- Drop CSN
 
