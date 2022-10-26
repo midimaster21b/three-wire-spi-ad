@@ -308,7 +308,7 @@ begin
   begin
     if(rising_edge(spi_clk_in_p)) then
       -- Read SPI data
-      if(curr_spi_state_r = SPI_READ_STATE) then
+      if(curr_spi_state_r = SPI_READ_STATE or curr_spi_state_r = SPI_READ_OUT_STATE) then
         spi_read_data_r <= spi_read_data_r(6 downto 0) & sdio_in_p;
 
       end if;
@@ -327,36 +327,36 @@ begin
 
 
 
-  -----------------------------------------------------------------------------
-  -- Components
-  -----------------------------------------------------------------------------
-  u_spi_clk_gate : BUFGCE
-    generic map (
-      CE_TYPE        => "SYNC",           -- ASYNC, HARDSYNC, SYNC
-      IS_CE_INVERTED => '0',              -- Programmable inversion on CE
-      IS_I_INVERTED  => '0',              -- Programmable inversion on I
-      SIM_DEVICE     => "ULTRASCALE_PLUS" -- ULTRASCALE, ULTRASCALE_PLUS
-      )
-    port map (
-      O  => sclk_r,      -- 1-bit output: Buffer
-      CE => sclk_en_r,   -- 1-bit input: Buffer enable
-      I  => spi_clk_in_p -- 1-bit input: Buffer
-      );
+  -- -----------------------------------------------------------------------------
+  -- -- Components
+  -- -----------------------------------------------------------------------------
+  -- u_spi_clk_gate : BUFGCE
+  --   generic map (
+  --     CE_TYPE        => "SYNC",           -- ASYNC, HARDSYNC, SYNC
+  --     IS_CE_INVERTED => '0',              -- Programmable inversion on CE
+  --     IS_I_INVERTED  => '0',              -- Programmable inversion on I
+  --     SIM_DEVICE     => "ULTRASCALE_PLUS" -- ULTRASCALE, ULTRASCALE_PLUS
+  --     )
+  --   port map (
+  --     O  => sclk_r,      -- 1-bit output: Buffer
+  --     CE => sclk_en_r,   -- 1-bit input: Buffer enable
+  --     I  => spi_clk_in_p -- 1-bit input: Buffer
+  --     );
 
-  u_spi_data : IDDRE1
-    generic map (
-      DDR_CLK_EDGE   => "OPPOSITE_EDGE", -- IDDRE1 mode (OPPOSITE_EDGE, SAME_EDGE, SAME_EDGE_PIPELINED)
-      IS_CB_INVERTED => '0',             -- Optional inversion for CB
-      IS_C_INVERTED  => '0'              -- Optional inversion for C
-      )
-    port map (
-      Q1 => sdio_in_a_r,   -- 1-bit output: Registered parallel output 1
-      Q2 => sdio_in_b_r,   -- 1-bit output: Registered parallel output 2
-      C  => spi_clk_in_p,  -- 1-bit input: High-speed clock
-      CB => spi_clk_in_ns, -- 1-bit input: Inversion of High-speed clock C
-      D  => sdio_in_p,     -- 1-bit input: Serial Data Input
-      R  => spi_rst_in_p   -- 1-bit input: Active-High Async Reset
-      );
+  -- u_spi_data : IDDRE1
+  --   generic map (
+  --     DDR_CLK_EDGE   => "OPPOSITE_EDGE", -- IDDRE1 mode (OPPOSITE_EDGE, SAME_EDGE, SAME_EDGE_PIPELINED)
+  --     IS_CB_INVERTED => '0',             -- Optional inversion for CB
+  --     IS_C_INVERTED  => '0'              -- Optional inversion for C
+  --     )
+  --   port map (
+  --     Q1 => sdio_in_a_r,   -- 1-bit output: Registered parallel output 1
+  --     Q2 => sdio_in_b_r,   -- 1-bit output: Registered parallel output 2
+  --     C  => spi_clk_in_p,  -- 1-bit input: High-speed clock
+  --     CB => spi_clk_in_ns, -- 1-bit input: Inversion of High-speed clock C
+  --     D  => sdio_in_p,     -- 1-bit input: Serial Data Input
+  --     R  => spi_rst_in_p   -- 1-bit input: Active-High Async Reset
+  --     );
 
 
 end rtl;
