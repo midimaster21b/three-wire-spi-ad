@@ -154,8 +154,8 @@ begin
     generic map (
       NUM_ADDR_BITS_G  => NUM_ADDR_BITS_G,
       NUM_DATA_BITS_G  => NUM_DATA_BITS_G,
-      AXI_DATA_WIDTH_G => AXI_REGS_ADDR_WIDTH_G,
-      AXI_ADDR_WIDTH_G => AXI_REGS_DATA_WIDTH_G
+      AXI_DATA_WIDTH_G => AXI_REGS_DATA_WIDTH_G,
+      AXI_ADDR_WIDTH_G => AXI_REGS_ADDR_WIDTH_G
       )
     port map (
       -- SPI module interface
