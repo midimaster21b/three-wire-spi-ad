@@ -69,6 +69,15 @@ architecture rtl of three_wire_spi_top is
   signal spi_clk_in_ns       : std_logic;
   signal sdio_high_z_s       : std_logic;
 
+  signal axi_rst_s        : std_logic;
+  signal axi_trig_s       : std_logic;
+  signal axi_rw_s         : std_logic;
+  signal axi_addr_s       : std_logic_vector(NUM_ADDR_BITS_G-1 downto 0);
+  signal axi_data_write_s : std_logic_vector(NUM_DATA_BITS_G-1 downto 0);
+
+  signal axi_data_read_s  : std_logic_vector(NUM_DATA_BITS_G-1 downto 0);
+  signal axi_valid_s      : std_logic;
+
   signal spi_rst_s        : std_logic;
   signal spi_trig_s       : std_logic;
   signal spi_rw_s         : std_logic;
@@ -149,6 +158,36 @@ begin
       );
 
 
+  u_cdc : entity work.three_wire_spi_cdc(rtl)
+    generic map (
+      NUM_ADDR_BITS_G => NUM_ADDR_BITS_G,
+      NUM_DATA_BITS_G => NUM_DATA_BITS_G
+      )
+    port map (
+      axi_clk_p            => s_axi_regs_aclk_p,
+      spi_clk_p            => spi_clk_in_p,
+
+      -- AXI module interface
+      axi_rst_in_p         => axi_rst_s,
+      axi_trig_in_p        => axi_trig_s,
+      axi_rw_in_p          => axi_rw_s,
+      axi_addr_in_p        => axi_addr_s,
+      axi_write_data_in_p  => axi_data_write_s,
+
+      axi_read_data_out_p  => axi_data_read_s,
+      axi_valid_out_p      => axi_valid_s,
+
+      -- SPI module interface
+      spi_rst_out_p        => spi_rst_s,
+      spi_trig_out_p       => spi_trig_s,
+      spi_rw_out_p         => spi_rw_s,
+      spi_addr_out_p       => spi_addr_s,
+      spi_write_data_out_p => spi_data_write_s,
+
+      spi_read_data_in_p   => spi_data_read_s,
+      spi_valid_in_p       => spi_valid_s
+    );
+
 
   u_three_wire_spi_regs : entity work.three_wire_spi_regs(rtl)
     generic map (
@@ -159,14 +198,14 @@ begin
       )
     port map (
       -- SPI module interface
-      spi_rst_out_p     => spi_rst_s,
-      spi_trig_out_p    => spi_trig_s,
-      spi_rw_out_p      => spi_rw_s,
-      spi_addr_out_p    => spi_addr_s,
-      spi_data_out_p    => spi_data_write_s,
+      spi_rst_out_p     => axi_rst_s,
+      spi_trig_out_p    => axi_trig_s,
+      spi_rw_out_p      => axi_rw_s,
+      spi_addr_out_p    => axi_addr_s,
+      spi_data_out_p    => axi_data_write_s,
 
-      spi_data_in_p     => spi_data_read_s,
-      spi_valid_in_p    => spi_valid_s,
+      spi_data_in_p     => axi_data_read_s,
+      spi_valid_in_p    => axi_valid_s,
 
       -- AXI Interface
       S_AXI_ACLK	=> s_axi_regs_aclk_p,
