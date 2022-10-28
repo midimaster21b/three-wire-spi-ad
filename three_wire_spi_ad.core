@@ -10,6 +10,10 @@ filesets:
       - src/rtl/three_wire_spi.vhd
       - src/rtl/three_wire_spi_top.vhd
     file_type: vhdlSource
+    depend:
+      - midimaster21b:cdc:bit:0.1.0
+      - midimaster21b:cdc:array:0.1.0
+      - midimaster21b:cdc:pulse:0.1.0
 
   tb:
     files:
