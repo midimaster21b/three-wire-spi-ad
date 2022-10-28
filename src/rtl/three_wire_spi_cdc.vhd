@@ -123,7 +123,7 @@ begin
 
 
   -- axi_trig_in_p
-  u_trig_pulse : entity work.cdc_pulse(rtl)
+  u_trig_pulse_cdc: entity work.cdc_pulse(rtl)
     port map (
     src_clk_in    => axi_clk_p,
     dest_clk_in   => spi_clk_p,
