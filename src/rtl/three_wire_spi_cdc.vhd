@@ -2,9 +2,6 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
-library xpm;
-use xpm.vcomponents.all;
-
 entity three_wire_spi_cdc is
   generic (
     NUM_ADDR_BITS_G : integer := 5;
@@ -40,118 +37,100 @@ end three_wire_spi_cdc;
 architecture rtl of three_wire_spi_cdc is
 
 begin
-
   -- axi_addr_in_p
-  u_addr_cdc : xpm_cdc_array_single
+  u_addr_cdc : entity work.cdc_array(rtl)
     generic map (
-      DEST_SYNC_FF   => 10,
-      INIT_SYNC_FF   => 0,
-      SIM_ASSERT_CHK => 0,
-      SRC_INPUT_REG  => 1,
-      WIDTH          => NUM_ADDR_BITS_G
+      NUM_FF_G   => 10,
+      NUM_BITS_G => NUM_ADDR_BITS_G
       )
     port map (
-      src_clk  => axi_clk_p,
-      src_in   => axi_addr_in_p,
-      dest_clk => spi_clk_p,
-      dest_out => spi_addr_out_p
+      src_clk_in    => axi_clk_p,
+      dest_clk_in   => spi_clk_p,
+
+      src_data_in   => axi_addr_in_p,
+      dest_data_out => spi_addr_out_p
       );
 
+
+
+
   -- axi_data_in_p
-  u_write_data_cdc : xpm_cdc_array_single
+  u_write_data_cdc : entity work.cdc_array(rtl)
     generic map (
-      DEST_SYNC_FF   => 10,
-      INIT_SYNC_FF   => 0,
-      SIM_ASSERT_CHK => 0,
-      SRC_INPUT_REG  => 1,
-      WIDTH          => NUM_DATA_BITS_G
+      NUM_FF_G   => 10,
+      NUM_BITS_G => NUM_DATA_BITS_G
       )
     port map (
-      src_clk  => axi_clk_p,
-      src_in   => axi_write_data_in_p,
-      dest_clk => spi_clk_p,
-      dest_out => spi_write_data_out_p
+      src_clk_in    => axi_clk_p,
+      dest_clk_in   => spi_clk_p,
+
+      src_data_in   => axi_write_data_in_p,
+      dest_data_out => spi_write_data_out_p
       );
 
   -- axi_data_out_p
-  u_read_data_cdc : xpm_cdc_array_single
+  u_read_data_cdc : entity work.cdc_array(rtl)
     generic map (
-      DEST_SYNC_FF   => 4,
-      INIT_SYNC_FF   => 0,
-      SIM_ASSERT_CHK => 0,
-      SRC_INPUT_REG  => 1,
-      WIDTH          => NUM_DATA_BITS_G
+      NUM_FF_G   => 10,
+      NUM_BITS_G => NUM_DATA_BITS_G
       )
     port map (
-      src_clk  => spi_clk_p,
-      src_in   => spi_read_data_in_p,
-      dest_clk => axi_clk_p,
-      dest_out => axi_read_data_out_p
+      src_clk_in    => spi_clk_p,
+      dest_clk_in   => axi_clk_p,
+
+      src_data_in   => spi_read_data_in_p,
+      dest_data_out => axi_read_data_out_p
       );
 
-
   -- axi_rst_in_p
-  u_rst_cdc : xpm_cdc_single
+  u_rst_cdc: entity work.cdc_bit(rtl)
     generic map (
-      DEST_SYNC_FF   => 10,
-      INIT_SYNC_FF   => 0,
-      SIM_ASSERT_CHK => 0,
-      SRC_INPUT_REG  => 1
+      NUM_FF_G => 10
       )
     port map (
-      src_clk        => axi_clk_p, 
-      src_in         => axi_rst_in_p,
-      dest_clk       => spi_clk_p,
-      dest_out       => spi_rst_out_p
+      src_clk_in    => axi_clk_p,
+      dest_clk_in   => spi_clk_p,
+
+      src_data_in   => axi_rst_in_p,
+      dest_data_out => spi_rst_out_p
       );
 
   -- axi_rw_in_p
-  u_rw_cdc : xpm_cdc_single
+  u_rw_cdc: entity work.cdc_bit(rtl)
     generic map (
-      DEST_SYNC_FF   => 10,
-      INIT_SYNC_FF   => 0,
-      SIM_ASSERT_CHK => 0,
-      SRC_INPUT_REG  => 1
+      NUM_FF_G => 10
       )
     port map (
-      src_clk        => axi_clk_p,
-      src_in         => axi_rw_in_p,
-      dest_clk       => spi_clk_p,
-      dest_out       => spi_rw_out_p
+      src_clk_in    => axi_clk_p,
+      dest_clk_in   => spi_clk_p,
+
+      src_data_in   => axi_rw_in_p,
+      dest_data_out => spi_rw_out_p
       );
 
   -- axi_valid_out_p
-  u_valid_cdc : xpm_cdc_single
+  u_valid_cdc: entity work.cdc_bit(rtl)
     generic map (
-      DEST_SYNC_FF   => 4,
-      INIT_SYNC_FF   => 0,
-      SIM_ASSERT_CHK => 0,
-      SRC_INPUT_REG  => 1
+      NUM_FF_G => 4
       )
     port map (
-      src_clk        => spi_clk_p,
-      src_in         => spi_valid_in_p,
-      dest_clk       => axi_clk_p,
-      dest_out       => axi_valid_out_p
+      src_clk_in    => spi_clk_p,
+      dest_clk_in   => axi_clk_p,
+
+      src_data_in   => spi_valid_in_p,
+      dest_data_out => axi_valid_out_p
       );
 
 
   -- axi_trig_in_p
-  u_trig_pulse : xpm_cdc_pulse
-    generic map (
-      DEST_SYNC_FF   => 10,
-      INIT_SYNC_FF   => 0,
-      REG_OUTPUT     => 0,
-      RST_USED       => 0,
-      SIM_ASSERT_CHK => 0
-      )
+  u_trig_pulse : entity work.cdc_pulse(rtl)
     port map (
-      src_clk    => axi_clk_p,
-      src_rst    => '0', -- axi_rst_in_p
-      src_pulse  => axi_trig_in_p,
-      dest_clk   => spi_clk_p,
-      dest_rst   => '0', -- spi_rst_out_p
-      dest_pulse => spi_trig_out_p
-      );
+    src_clk_in    => axi_clk_p,
+    dest_clk_in   => spi_clk_p,
+
+    src_data_in   => axi_trig_in_p,
+    dest_data_out => spi_trig_out_p
+    );
+
 
 end rtl;
