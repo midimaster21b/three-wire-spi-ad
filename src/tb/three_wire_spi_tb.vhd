@@ -5,6 +5,7 @@ use IEEE.NUMERIC_STD.ALL;
 library UNISIM;
 use UNISIM.vcomponents.all;
 
+use std.env.finish;
 
 entity three_wire_spi_tb is
 end three_wire_spi_tb;
@@ -104,6 +105,9 @@ begin
     spi_sdio_s <= '1';
     wait for (CLK_25_PERIOD_C - 5ns);
     spi_sdio_s <= 'Z';
+    report "This is me switching back to high-z";
+    wait for 3 us;
+    finish;
     wait;
   end process;
 
