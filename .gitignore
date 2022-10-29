@@ -1,0 +1,7 @@
+build
+env
+*.log
+*.jou
+src/scripts/ip_repo
+src/scripts/ip_tmp
+
