@@ -5,6 +5,7 @@ description: A basic implementation of the Analog Digital three wire SPI protoco
 filesets:
   rtl:
     files:
+      - src/tb/glbl.v: {file_type: verilogSource}
       - src/rtl/three_wire_spi_regs.vhd
       - src/rtl/three_wire_spi_cdc.vhd
       - src/rtl/three_wire_spi.vhd
@@ -33,6 +34,9 @@ targets:
     <<: *default
     description: Simulate the design
     default_tool: xsim
+    tools:
+      xsim:
+        xelab_options: [glbl]
     filesets_append:
       - tb
     toplevel: three_wire_spi_tb
