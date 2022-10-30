@@ -21,6 +21,11 @@ filesets:
       - src/tb/three_wire_spi_tb.vhd
     file_type: vhdlSource
 
+  pkg_script:
+    files:
+      - src/scripts/pkg_ip.tcl
+    file_type: tclSource
+
 
 targets:
   # Special FuseSoC target
@@ -40,3 +45,10 @@ targets:
     filesets_append:
       - tb
     toplevel: three_wire_spi_tb
+
+  pkg_ip:
+    default_tool: vivado
+    filesets:
+      - rtl
+      - pkg_script
+    toplevel: three_wire_spi_wrapper_top

@@ -28,11 +28,24 @@ puts "Working directory: $currentDir";
 puts "Project directory: $ipGenDir";
 puts "IP repo directory: $ipDir";
 
+set files [get_files];
+
+puts "Files: $files";
+puts "================================================================";
+
 
 create_project -force $projName $ipGenDir -part $partID
+puts "================================================================";
 set_property target_language VHDL [current_project]
-add_files -norecurse $fileList
+puts "================================================================";
+add_files -norecurse $files
+puts "================================================================";
+set_property top three_wire_spi_top [current_fileset]
+puts "================================================================";
 update_compile_order -fileset sources_1
+puts "================================================================";
+puts "Beginning IPX stuffs";
+puts "================================================================";
 ipx::package_project -root_dir $ipDir -vendor $vendor -library $library -taxonomy $taxonomy -import_files -set_current false
 ipx::unload_core $corePath
 ipx::edit_ip_in_project -upgrade true -name tmp_edit_project -directory $ipDir $corePath
@@ -47,4 +60,8 @@ ipx::move_temp_component_back -component [ipx::current_core]
 close_project -delete
 set_property  ip_repo_paths  $ipDir [current_project]
 update_ip_catalog
+
+puts "================================================================";
+puts "Finished Creating project \"$projName\" \[$partID\]";
+puts "================================================================";
 quit
