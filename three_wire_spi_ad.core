@@ -30,6 +30,7 @@ filesets:
 targets:
   # Special FuseSoC target
   default: &default
+    default_tool: vivado
     filesets:
       - rtl
       - pkg_script
