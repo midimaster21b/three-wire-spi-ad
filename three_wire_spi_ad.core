@@ -32,11 +32,11 @@ targets:
   default: &default
     filesets:
       - rtl
+      - pkg_script
     toplevel: three_wire_spi_top
 
   # Simulation target
   sim:
-    <<: *default
     description: Simulate the design
     default_tool: xsim
     tools:
@@ -47,8 +47,6 @@ targets:
     toplevel: three_wire_spi_tb
 
   pkg_ip:
+    <<: *default
     default_tool: vivado
-    filesets:
-      - rtl
-      - pkg_script
     toplevel: three_wire_spi_wrapper_top

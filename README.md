@@ -4,6 +4,18 @@ This project was initially made to interface with the Analog Digital AD9467 ADC.
 
 The application note can be found [here](https://www.analog.com/AN-877?doc=AD9670).
 
+## How to use
+
+### Packaging the IP
+
+`fusesoc --cores-root . run --target pkg_ip midimaster21b:comm:three-wire-spi-ad:0.1.0 --pnr=none`
+
+
+### Simulating the IP
+
+`fusesoc --cores-root . run --target sim midimaster21b:comm:three-wire-spi-ad:0.1.0`
+
+
 ## SPI Specifications
 
 - 3-wire SPI
@@ -14,7 +26,6 @@ The application note can be found [here](https://www.analog.com/AN-877?doc=AD967
 - Typical hold time of 0 ns
 - Minimum setup time of 5 ns between SCLK and SDIO
 - Active low chip select
-
 
 
 ### Serial Clock (SCLK)

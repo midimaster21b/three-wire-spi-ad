@@ -10,15 +10,7 @@ set corePath   [file join $ipDir component.xml]
 set vendor     "midimaster21b"
 set library    "comm"
 set taxonomy   "/Communication"
-set fileList {
-    /home/midimaster21b/src/three-wire-spi/src/rtl/three_wire_spi_cdc.vhd
-    /home/midimaster21b/src/cdc/src/rtl/cdc_pulse.vhd
-    /home/midimaster21b/src/three-wire-spi/src/rtl/three_wire_spi.vhd
-    /home/midimaster21b/src/three-wire-spi/src/rtl/three_wire_spi_regs.vhd
-    /home/midimaster21b/src/cdc/src/rtl/cdc_array.vhd
-    /home/midimaster21b/src/three-wire-spi/src/rtl/three_wire_spi_top.vhd
-    /home/midimaster21b/src/cdc/src/rtl/cdc_bit.vhd
-}
+set files      [get_files];
 
 
 puts "================================================================";
@@ -28,21 +20,12 @@ puts "Working directory: $currentDir";
 puts "Project directory: $ipGenDir";
 puts "IP repo directory: $ipDir";
 
-set files [get_files];
-
-puts "Files: $files";
-puts "================================================================";
-
-
 create_project -force $projName $ipGenDir -part $partID
-puts "================================================================";
 set_property target_language VHDL [current_project]
-puts "================================================================";
 add_files -norecurse $files
-puts "================================================================";
 set_property top three_wire_spi_top [current_fileset]
-puts "================================================================";
 update_compile_order -fileset sources_1
+
 puts "================================================================";
 puts "Beginning IPX stuffs";
 puts "================================================================";
