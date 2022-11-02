@@ -91,8 +91,13 @@ begin
 
   spi_clk_in_ns <= not spi_clk_in_p;
 
-  sdio_p    <= 'Z' when sdio_high_z_s = '1' else sdio_out_s;
-  sdio_in_s <= sdio_p;
+  sdio_iobuf : IOBUF
+    port map (
+      O  => sdio_in_s,    -- 1-bit output: Buffer output
+      I  => sdio_out_s,   -- 1-bit input: Buffer input
+      IO => sdio_p,       -- 1-bit inout: Buffer inout (connect directly to top-level port)
+      T  => sdio_high_z_s -- 1-bit input: 3-state enable input
+      );
 
 
   -----------------------------------------------------------------------------
